@@ -3,6 +3,8 @@ package com.mprog.traindemo1.model;
 import lombok.Builder;
 import lombok.Value;
 
+import java.math.BigDecimal;
+
 @Value
 @Builder
 public class Ticket {
@@ -13,5 +15,5 @@ public class Ticket {
     int routeId;
     int railwayCarNo;
     String seatNo;
-    int cost;
+    BigDecimal cost;
 }
