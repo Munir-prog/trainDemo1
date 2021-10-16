@@ -3,3 +3,9 @@ spring:
     url: jdbc:postgresql://localhost:5432/railway_repository
     username: postgres
     password: postgres
+    driver-class-name: org.postgresql.Driver
+
+server:
+  error:
+    include-binding-errors: always
+    include-message: always
