@@ -1,0 +1,32 @@
+.idea
+*.iml
+
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# Package Files
+*.jar
+*.war
+*.nar
+*.ear
+*.tar.gz
+*.rar
+
+#compiled files
+out/
+build/
+target/
+
+#gradle
+.gradle
+gradle
+gradlew
+gradlew.bat
+
+#maven
+mvnw
+mvnw.cmd
+.mvn/
