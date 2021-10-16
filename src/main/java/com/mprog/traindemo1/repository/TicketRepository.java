@@ -3,9 +3,10 @@ package com.mprog.traindemo1.repository;
 import com.mprog.traindemo1.model.Ticket;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
+import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,8 +14,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
+@Repository
 @RequiredArgsConstructor
-public class TicketRepository implements Repository<Ticket> {
+public class TicketRepository implements RepositoryDao<Ticket> {
 
     private final DataSource dataSource;
 
@@ -113,7 +115,7 @@ public class TicketRepository implements Repository<Ticket> {
                 .routeId(resultSet.getObject("route_id", Integer.class))
                 .railwayCarNo(resultSet.getObject("railway_car_no", Integer.class))
                 .seatNo(resultSet.getObject("seat_no", String.class))
-                .cost(resultSet.getObject("cost", Integer.class))
+                .cost(resultSet.getObject("cost", BigDecimal.class))
                 .build();
     }
 
@@ -124,7 +126,7 @@ public class TicketRepository implements Repository<Ticket> {
         preparedStatement.setInt(4, object.getRouteId());
         preparedStatement.setInt(5, object.getRailwayCarNo());
         preparedStatement.setString(6, object.getSeatNo());
-        preparedStatement.setInt(7, object.getCost());
+        preparedStatement.setBigDecimal(7, object.getCost());
     }
 
 }

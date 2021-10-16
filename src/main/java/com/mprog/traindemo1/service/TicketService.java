@@ -30,11 +30,11 @@ public class TicketService implements DaoService<Ticket> {
 
     @Override
     public void save(Ticket object) {
-        ticketRepository.save(object);
+        if (object.getId() == 0) {
+            ticketRepository.save(object);
+        } else {
+            ticketRepository.update(object);
+        }
     }
 
-    @Override
-    public void update(Ticket object) {
-        ticketRepository.update(object);
-    }
 }
