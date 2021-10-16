@@ -1,0 +1,5 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/railway_repository
+    username: postgres
+    password: postgres
