@@ -17,4 +17,15 @@ public class Ticket {
     int railwayCarNo;
     String seatNo;
     BigDecimal cost;
+
+    @Override
+    public String toString() {
+        return "Id:                    " + id +
+                "\nName:                  " + passengerName +
+                "\nSurname:               " + passengerLastName +
+                "\nRoute id:              " + routeId +
+                "\nNumber of railway car: " + railwayCarNo +
+                "\nSeat number:           " + seatNo +
+                "\nPrice:                 " + cost;
+    }
 }

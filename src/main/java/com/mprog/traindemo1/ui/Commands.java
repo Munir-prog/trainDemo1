@@ -6,13 +6,17 @@ import com.mprog.traindemo1.service.TicketService;
 import com.mprog.traindemo1.service.exception.AppException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellMethodAvailability;
 import org.springframework.shell.standard.ShellOption;
 
 import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 @ShellComponent
 @RequiredArgsConstructor
@@ -41,10 +45,9 @@ public class Commands {
     public void showAllTickets() {
         var tickets = ticketService.findAll();
         if (tickets.isEmpty()) {
-            io.interPrintln("no-book-found");
+            io.interPrintln("no-ticket-found");
         } else {
-            // TODO pretty output for tickets
-            io.println(tickets);
+            io.println(ticketsToString(tickets));
         }
     }
 
@@ -61,7 +64,6 @@ public class Commands {
     @ShellMethod(value = "show handling book", key = "show")
     @ShellMethodAvailability("availableInUpdatingTicket")
     private void show() {
-        // TODO pretty output for tickets
         io.println(handlingTicket);
     }
 
@@ -78,7 +80,7 @@ public class Commands {
             passengerNumber = io.readLine();
         }
         if (passengerNumber.isBlank()) {
-            io.interPrintln("Empty line entered, operation cancelled");
+            io.interPrintln("operation-cancelled-by-empty-line");
         } else {
             handlingTicket.setPassengerNo(passengerNumber);
             io.interPrintln("new-passenger-number-is", handlingTicket.getPassengerNo());
@@ -93,7 +95,7 @@ public class Commands {
             passengerName = io.readLine();
         }
         if (passengerName.isBlank()) {
-            io.interPrintln("Empty line entered, operation cancelled");
+            io.interPrintln("operation-cancelled-by-empty-line");
         } else {
             handlingTicket.setPassengerName(passengerName);
             io.interPrintln("new-passenger-name-is", handlingTicket.getPassengerName());
@@ -104,48 +106,60 @@ public class Commands {
     @ShellMethodAvailability("availableInUpdatingTicket")
     public void setPassengerLastName(@ShellOption(defaultValue = "") String passengerLastName) {
         if (passengerLastName.isBlank()) {
-            io.interPrint("set-passenger-last-name");
+            io.interPrintln("set-passenger-last-name");
             passengerLastName = io.readLine();
         }
         if (passengerLastName.isBlank()) {
-            io.interPrintln("Empty line entered, operation cancelled");
+            io.interPrintln("operation-cancelled-by-empty-line");
         } else {
-            handlingTicket.setPassengerName(passengerLastName);
+            handlingTicket.setPassengerLastName(passengerLastName);
             io.interPrintln("new-passenger-last-name-is", handlingTicket.getPassengerLastName());
         }
     }
 
     //TODO make route with meaning from database
+
     @ShellMethod(value = "set route id", key = "set-route-id")
     @ShellMethodAvailability("availableInUpdatingTicket")
-    public void setRouteId(@ShellOption(defaultValue = "") int routeId) {
-        if (routeId > 10 || routeId < 1) {
-            io.interPrintln("invalid-route-id");
-            io.interPrintln("write-one-more");
-            routeId = io.nextInt();
+    public void setRouteId(@ShellOption(defaultValue = "") String routeId) {
+        if (routeId.isBlank()){
+            io.interPrintln("set-route-id");
+            routeId = io.readLine();
         }
-        if (routeId > 10 || routeId < 1) {
+        var intRouteId = Integer.parseInt(routeId);
+        if (intRouteId > 10 || intRouteId < 1) {
+            io.interPrintln("invalid-route-id");
+            io.interPrintln("try-again");
+            routeId = io.readLine();
+            intRouteId = Integer.parseInt(routeId);
+        }
+        if (intRouteId > 10 || intRouteId < 1) {
             io.interPrintln("invalid-route-id");
             io.interPrintln("operation-cancelled");
         } else {
-            handlingTicket.setRouteId(routeId);
+            handlingTicket.setRouteId(intRouteId);
             io.interPrintln("new-route-id-is", handlingTicket.getRouteId());
         }
     }
-
     @ShellMethod(value = "set railway car number", key = "set-railway-car-number")
     @ShellMethodAvailability("availableInUpdatingTicket")
-    public void setRailwayCarNumber(@ShellOption(defaultValue = "") int railwayCarNumber) {
-        if (railwayCarNumber > 10 || railwayCarNumber < 1) {
-            io.interPrintln("invalid-railway-car-number-id");
-            io.interPrintln("write-one-more");
-            railwayCarNumber = io.nextInt();
+    public void setRailwayCarNumber(@ShellOption(defaultValue = "") String railwayCarNumber) {
+        if (railwayCarNumber.isBlank()){
+            io.interPrintln("set-railway-car-number");
+            railwayCarNumber = io.readLine();
         }
-        if (railwayCarNumber > 10 || railwayCarNumber < 1) {
+        var intRailwayCarNumber = Integer.parseInt(railwayCarNumber);
+        if (intRailwayCarNumber > 10 || intRailwayCarNumber < 1) {
+            io.interPrintln("invalid-railway-car-number-id");
+            io.interPrintln("try-again");
+            railwayCarNumber = io.readLine();
+            intRailwayCarNumber = Integer.parseInt(railwayCarNumber);
+        }
+        if (intRailwayCarNumber > 10 || intRailwayCarNumber < 1) {
             io.interPrintln("invalid-railway-car-number-id");
             io.interPrintln("operation-cancelled");
         } else {
-            handlingTicket.setRailwayCarNo(railwayCarNumber);
+            handlingTicket.setRailwayCarNo(intRailwayCarNumber);
             io.interPrintln("new-railway-car-number-is", handlingTicket.getRailwayCarNo());
         }
     }
@@ -154,12 +168,12 @@ public class Commands {
     @ShellMethodAvailability("availableInUpdatingTicket")
     public void setSeatValue(@ShellOption(defaultValue = "") String seatNumber) {
         if (seatNumber.isBlank()) {
-            io.interPrintln("invalid-railway-seat-number-id");
-            io.interPrintln("write-one-more");
+            io.interPrintln("invalid-seat-number-id");
+            io.interPrintln("try-again");
             seatNumber = io.readLine();
         }
         if (seatNumber.isBlank()) {
-            io.interPrintln("invalid-railway-seat-number-id");
+            io.interPrintln("invalid-seat-number-id");
             io.interPrintln("operation-cancelled");
         } else {
             handlingTicket.setSeatNo(seatNumber);
@@ -169,23 +183,29 @@ public class Commands {
 
     @ShellMethod(value = "set ticket cost", key = "set-cost")
     @ShellMethodAvailability("availableInUpdatingTicket")
-    public void setCost(@ShellOption(defaultValue = "") BigDecimal cost) {
-        if (cost.equals(BigDecimal.valueOf(0))) {
-            io.interPrintln("invalid-cost");
-            io.interPrintln("write-one-more");
-            cost = io.nextBigDecimal();
+    public void setCost(@ShellOption(defaultValue = "") String cost) {
+        if (cost.isBlank()){
+            io.interPrintln("set-cost");
+            cost = io.readLine();
         }
-        if (cost.equals(BigDecimal.valueOf(0))) {
+        var bigDecimalCost = BigDecimal.valueOf(Long.parseLong(cost));
+        if (bigDecimalCost.equals(BigDecimal.valueOf(0))) {
+            io.interPrintln("invalid-cost");
+            io.interPrintln("try-again");
+            cost = io.readLine();
+            bigDecimalCost = BigDecimal.valueOf(Long.parseLong(cost));
+        }
+        if (bigDecimalCost.equals(BigDecimal.valueOf(0))) {
             io.interPrintln("invalid-cost");
             io.interPrintln("operation-cancelled");
         } else {
-            handlingTicket.setCost(cost);
+            handlingTicket.setCost(bigDecimalCost);
             io.interPrintln("new-cost-is", handlingTicket.getCost());
         }
     }
 
     @ShellMethod(value = "perform current operation", key = "perform")
-    @ShellMethodAvailability("availableInUpdatingBook")
+    @ShellMethodAvailability("availableInUpdatingTicket")
     public void perform() {
         try {
             if (checkHandlingTicket()) {
@@ -196,6 +216,25 @@ public class Commands {
         } catch (AppException e) {
             io.interPrintln(e.getMessage(), e.getParams());
         }
+    }
+
+    @ShellMethod(value = "cancel current operation", key = "cancel")
+    @ShellMethodAvailability("availableInUpdatingTicket")
+    public void cancel() {
+        io.interPrintln("operation-cancelled");
+        state = ShellState.MAIN_MENU;
+    }
+
+    private Availability availableInMainMenu() {
+        return state == ShellState.MAIN_MENU ? Availability.available()
+                : Availability.unavailable("available in " + ShellState.MAIN_MENU.getTitle() +
+                " only, you now in " + state.getTitle());
+    }
+
+    private Availability availableInUpdatingTicket() {
+        return state == ShellState.PROCESSING_TICKET ? Availability.available()
+                : Availability.unavailable("available in " + ShellState.PROCESSING_TICKET.getTitle() +
+                " only, you now in " + state.getTitle());
     }
 
     private boolean checkHandlingTicket() {
@@ -221,5 +260,12 @@ public class Commands {
             throw new AppException("ticket.check.cost-must-be-set");
         }
         return true;
+    }
+
+    private String ticketsToString(Collection<Ticket> tickets) {
+        return tickets.stream()
+                .map(Ticket::toString)
+                .collect(Collectors.joining("\n\n=============================\n\n"));
+
     }
 }

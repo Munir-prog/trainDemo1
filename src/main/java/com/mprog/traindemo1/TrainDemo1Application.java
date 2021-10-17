@@ -14,8 +14,6 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class TrainDemo1Application {
 
-    @Autowired
-    private ApplicationContext context;
 
     public static void main(String[] args) {
         SpringApplication.run(TrainDemo1Application.class, args);
