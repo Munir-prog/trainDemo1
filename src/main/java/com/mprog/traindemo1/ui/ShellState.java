@@ -5,7 +5,7 @@ import lombok.Getter;
 public enum ShellState {
 
     MAIN_MENU("main menu"),
-    PROCESSING_BOOK("book processing");
+    PROCESSING_TICKET("ticket processing");
 
     @Getter
     private final String title;

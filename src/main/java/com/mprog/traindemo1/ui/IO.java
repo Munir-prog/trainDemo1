@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.util.Scanner;
 
 @Component
@@ -46,5 +47,13 @@ public class IO {
 
     public String readLine() {
         return scanner.nextLine().strip();
+    }
+
+    public int nextInt() {
+        return scanner.nextInt();
+    }
+
+    public BigDecimal nextBigDecimal() {
+        return scanner.nextBigDecimal();
     }
 }
