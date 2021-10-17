@@ -1,12 +1,13 @@
 package com.mprog.traindemo1.model;
 
-import lombok.Builder;
-import lombok.Value;
+import lombok.*;
 
 import java.math.BigDecimal;
 
-@Value
+@Setter
+@Data
 @Builder
+@AllArgsConstructor
 public class Ticket {
     int id;
     String passengerNo;
