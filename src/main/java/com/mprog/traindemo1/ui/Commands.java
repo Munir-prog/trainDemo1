@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @ShellComponent
@@ -32,7 +33,7 @@ public class Commands {
 
     @ShellMethod(value = "change current language", key = {"language", "lang"})
     @ShellMethodAvailability("availableInMainMenu")
-    public void setLanguage(String language){
+    public void setLanguage(String language) {
         try {
             currentLocaleService.set(language.strip().toLowerCase());
         } catch (AppException e) {
@@ -59,6 +60,54 @@ public class Commands {
                 "", 0, 0, "", BigDecimal.valueOf(0));
         state = ShellState.PROCESSING_TICKET;
         show();
+    }
+
+    @ShellMethod(value = "update ticket by passenger name", key = "ticket-update")
+    @ShellMethodAvailability("availableInMainMenu")
+    public void updateTicket(@ShellOption(defaultValue = "") String name) {
+        if (name.isBlank()) {
+            io.interPrint("print-passenger-name");
+            name = io.readLine();
+        }
+        if (name.isBlank()) {
+            io.interPrintln("operation-cancelled-by-empty-line");
+        } else {
+            var tickets = ticketService.findByName(name);
+            if (tickets.isEmpty())
+                io.interPrintln("no-ticket-found");
+            else if (tickets.size() > 1) {
+                io.println(ticketsToString(tickets));
+                io.interPrint("too-many-tickets-found", tickets.size());
+                var id = io.nextInt();
+                findByIdFromCollectionAndProcess(tickets, id);
+            } else {
+                handlingTicket = tickets.iterator().next();
+                state = ShellState.PROCESSING_TICKET;
+                show();
+            }
+        }
+    }
+
+    @ShellMethod(value = "find ticket by passenger name", key = "find-by-name")
+    @ShellMethodAvailability("availableInMainMenu")
+    public void findByName(@ShellOption(defaultValue = "") String name){
+        if (name.isBlank()) {
+            io.interPrint("print-passenger-name");
+            name = io.readLine();
+        }
+        if (name.isBlank()) {
+            io.interPrintln("operation-cancelled-by-empty-line");
+        } else {
+            var tickets = ticketService.findByName(name);
+            if (tickets.isEmpty())
+                io.interPrintln("no-ticket-found");
+            else if (tickets.size() > 1) {
+                io.println(ticketsToString(tickets));
+            } else {
+                handlingTicket = tickets.iterator().next();
+                show();
+            }
+        }
     }
 
     @ShellMethod(value = "show handling book", key = "show")
@@ -117,12 +166,12 @@ public class Commands {
         }
     }
 
-    //TODO make route with meaning from database
 
+    //TODO make route with meaning from database
     @ShellMethod(value = "set route id", key = "set-route-id")
     @ShellMethodAvailability("availableInUpdatingTicket")
     public void setRouteId(@ShellOption(defaultValue = "") String routeId) {
-        if (routeId.isBlank()){
+        if (routeId.isBlank()) {
             io.interPrintln("set-route-id");
             routeId = io.readLine();
         }
@@ -141,10 +190,11 @@ public class Commands {
             io.interPrintln("new-route-id-is", handlingTicket.getRouteId());
         }
     }
+
     @ShellMethod(value = "set railway car number", key = "set-railway-car-number")
     @ShellMethodAvailability("availableInUpdatingTicket")
     public void setRailwayCarNumber(@ShellOption(defaultValue = "") String railwayCarNumber) {
-        if (railwayCarNumber.isBlank()){
+        if (railwayCarNumber.isBlank()) {
             io.interPrintln("set-railway-car-number");
             railwayCarNumber = io.readLine();
         }
@@ -184,7 +234,7 @@ public class Commands {
     @ShellMethod(value = "set ticket cost", key = "set-cost")
     @ShellMethodAvailability("availableInUpdatingTicket")
     public void setCost(@ShellOption(defaultValue = "") String cost) {
-        if (cost.isBlank()){
+        if (cost.isBlank()) {
             io.interPrintln("set-cost");
             cost = io.readLine();
         }
@@ -225,6 +275,19 @@ public class Commands {
         state = ShellState.MAIN_MENU;
     }
 
+    private void findByIdFromCollectionAndProcess(Collection<Ticket> tickets, int id) {
+        tickets.stream()
+                .filter(ticket -> ticket.getId() == id)
+                .findFirst()
+                .ifPresentOrElse(
+                        ticket -> {
+                            handlingTicket = ticket;
+                            show();
+                            state = ShellState.PROCESSING_TICKET;
+                        },
+                        () -> io.interPrintln("select-wrong-id"));
+    }
+
     private Availability availableInMainMenu() {
         return state == ShellState.MAIN_MENU ? Availability.available()
                 : Availability.unavailable("available in " + ShellState.MAIN_MENU.getTitle() +
@@ -256,7 +319,7 @@ public class Commands {
         if (handlingTicket.getSeatNo().isBlank()) {
             throw new AppException("ticket.check.seat-no-must-not-be-empty");
         }
-        if (handlingTicket.getCost().equals(BigDecimal.valueOf(0))){
+        if (handlingTicket.getCost().equals(BigDecimal.valueOf(0))) {
             throw new AppException("ticket.check.cost-must-be-set");
         }
         return true;

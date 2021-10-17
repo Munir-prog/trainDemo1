@@ -21,6 +21,7 @@ public class Ticket {
     @Override
     public String toString() {
         return "Id:                    " + id +
+                "\nPassenger number       " + passengerNo +
                 "\nName:                  " + passengerName +
                 "\nSurname:               " + passengerLastName +
                 "\nRoute id:              " + routeId +

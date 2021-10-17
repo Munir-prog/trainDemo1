@@ -105,6 +105,29 @@ public class TicketRepository implements RepositoryDao<Ticket> {
         }
     }
 
+    private static final String FIND_BY_NAME_SQL = """
+            SELECT id, passenger_no, passenger_name, passenger_last_name, route_id, railway_car_no, seat_no, cost
+            FROM ticket
+            WHERE passenger_name = ?
+            """;
+
+    @Override
+    @SneakyThrows
+    public Collection<Ticket> findByName(String name) {
+        try (var connection = dataSource.getConnection();
+             var preparedStatement = connection.prepareStatement(FIND_BY_NAME_SQL)) {
+
+            preparedStatement.setString(1, name);
+            Collection<Ticket> ticketCollection = new ArrayList<>();
+            var resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                ticketCollection.add(buildTicket(resultSet));
+            }
+
+            return ticketCollection;
+        }
+    }
+
     @SneakyThrows
     private Ticket buildTicket(ResultSet resultSet) {
         return Ticket.builder()

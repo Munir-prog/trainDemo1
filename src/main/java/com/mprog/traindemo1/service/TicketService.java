@@ -37,4 +37,9 @@ public class TicketService implements DaoService<Ticket> {
         }
     }
 
+    @Override
+    public Collection<Ticket> findByName(String name) {
+        return ticketRepository.findByName(name);
+    }
+
 }
