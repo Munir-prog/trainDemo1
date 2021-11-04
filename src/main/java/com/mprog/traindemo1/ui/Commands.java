@@ -56,8 +56,9 @@ public class Commands {
     @ShellMethod(value = "insert new ticket", key = "ticket-insert")
     @ShellMethodAvailability("availableInMainMenu")
     public void insertTicket() {
-        handlingTicket = new Ticket(0, "", "",
-                "", 0, 0, "", BigDecimal.valueOf(0));
+        handlingTicket = Ticket.buildNullTicket();
+//        handlingTicket = new Ticket(0, "", "",
+//                "", 0, 0, "", BigDecimal.valueOf(0), );
         state = ShellState.PROCESSING_TICKET;
         show();
     }

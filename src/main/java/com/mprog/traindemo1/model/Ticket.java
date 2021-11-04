@@ -4,7 +4,6 @@ import lombok.*;
 
 import java.math.BigDecimal;
 
-@Setter
 @Data
 @Builder
 @AllArgsConstructor
@@ -17,16 +16,31 @@ public class Ticket {
     int railwayCarNo;
     String seatNo;
     BigDecimal cost;
+    Route route;
 
     @Override
     public String toString() {
         return "Id:                    " + id +
-                "\nPassenger number       " + passengerNo +
+                "\nPassenger number:      " + passengerNo +
                 "\nName:                  " + passengerName +
                 "\nSurname:               " + passengerLastName +
-                "\nRoute id:              " + routeId +
+                "\nRoute:                 " + route.routeToString() +
                 "\nNumber of railway car: " + railwayCarNo +
                 "\nSeat number:           " + seatNo +
                 "\nPrice:                 " + cost;
+    }
+
+    public static Ticket buildNullTicket(){
+        return Ticket.builder()
+                .id(0)
+                .passengerNo(null)
+                .passengerName(null)
+                .passengerLastName(null)
+                .routeId(0)
+                .railwayCarNo(0)
+                .seatNo(null)
+                .cost(null)
+                .route(null)
+                .build();
     }
 }
