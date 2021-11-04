@@ -20,8 +20,9 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.shell:spring-shell-starter:2.0.0.RELEASE'
-    implementation group: 'org.springframework', name: 'spring-jdbc', version: '5.3.11'
+//    implementation group: 'org.springframework', name: 'spring-jdbc', version: '5.3.11'
     runtimeOnly 'org.postgresql:postgresql'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
