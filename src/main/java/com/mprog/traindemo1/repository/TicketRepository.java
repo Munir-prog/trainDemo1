@@ -3,6 +3,7 @@ package com.mprog.traindemo1.repository;
 import com.mprog.traindemo1.model.Ticket;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
 
@@ -46,11 +47,6 @@ public class TicketRepository implements RepositoryDao<Ticket> {
         return jdbc.query(sql, new TicketResultSetExtractor());
     }
 
-    private static final String FIND_BY_ID_SQL = """
-            SELECT id, passenger_no, passenger_name, passenger_last_name, route_id, railway_car_no, seat_no, cost
-            FROM ticket
-            WHERE id = ?
-            """;
 
     @Override
     @SneakyThrows
@@ -93,13 +89,11 @@ public class TicketRepository implements RepositoryDao<Ticket> {
     @Override
     @SneakyThrows
     public void save(Ticket object) {
-//        try (var connection = dataSource.getConnection();
-//             var preparedStatement = connection.prepareStatement(SAVE_SQL)) {
-//
-//            setParameters(object, preparedStatement);
-//
-//            preparedStatement.executeUpdate();
-//        }
+        String sql = """
+                INSERT INTO ticket (passenger_no, passenger_name, passenger_last_name, route_id, railway_car_no, seat_no, cost)
+                VALUES (:passenger_no, :passenger_name, :passenger_last_name, :route_id, :railway_car_no, :seat_no, :cost)
+                """;
+        jdbc.update(sql, getParams(object));
     }
 
     private static final String UPDATE_SQL = """
@@ -112,14 +106,27 @@ public class TicketRepository implements RepositoryDao<Ticket> {
     @Override
     @SneakyThrows
     public void update(Ticket object) {
-//        try (var connection = dataSource.getConnection();
-//             var preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
-//
-//            setParameters(object, preparedStatement);
-//            preparedStatement.setInt(8, object.getId());
-//
-//            preparedStatement.executeUpdate();
-//        }
+        String sql = """
+                UPDATE ticket
+                SET passenger_no = :passenger_no, passenger_name = :passenger_name,
+                passenger_last_name = :passenger_last_name, route_id = :route_id,
+                railway_car_no = :railway_car_no, seat_no = :seat_no, cost = :cost
+                WHERE id = :id
+                """;
+        jdbc.update(sql, getParams(object));
+    }
+
+    private MapSqlParameterSource getParams(Ticket object) {
+        var params = new MapSqlParameterSource();
+        params.addValue("passenger_no", object.getPassengerNo());
+        params.addValue("passenger_name", object.getPassengerName());
+        params.addValue("passenger_last_name", object.getPassengerLastName());
+        params.addValue("route_id", object.getRouteId());
+        params.addValue("railway_car_no", object.getRailwayCarNo());
+        params.addValue("seat_no", object.getSeatNo());
+        params.addValue("cost", object.getCost());
+        params.addValue("id", object.getId());
+        return params;
     }
 
     private static final String FIND_BY_NAME_SQL = """
@@ -131,19 +138,15 @@ public class TicketRepository implements RepositoryDao<Ticket> {
     @Override
     @SneakyThrows
     public Collection<Ticket> findByName(String name) {
-//        try (var connection = dataSource.getConnection();
-//             var preparedStatement = connection.prepareStatement(FIND_BY_NAME_SQL)) {
-//
-//            preparedStatement.setString(1, name);
-//            Collection<Ticket> ticketCollection = new ArrayList<>();
-//            var resultSet = preparedStatement.executeQuery();
-//            while (resultSet.next()) {
-//                ticketCollection.add(buildTicket(resultSet));
-//            }
-//
-//            return ticketCollection;
-//        }
-        return null;
+        var params = new MapSqlParameterSource();
+        params.addValue("passenger_name", name);
+
+        String sql = """
+                SELECT id, passenger_no, passenger_name, passenger_last_name, route_id, railway_car_no, seat_no, cost
+                FROM ticket
+                WHERE passenger_name = :passenger_name
+                """;
+        return jdbc.query(sql, params, new TicketRowMapper());
     }
 
     @SneakyThrows

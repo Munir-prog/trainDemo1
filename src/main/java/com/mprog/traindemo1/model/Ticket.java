@@ -20,6 +20,16 @@ public class Ticket {
 
     @Override
     public String toString() {
+        if (route == null){
+            return "Id:                    " + id +
+                    "\nPassenger number:      " + passengerNo +
+                    "\nName:                  " + passengerName +
+                    "\nSurname:               " + passengerLastName +
+                    "\nRoute id:              " + routeId +
+                    "\nNumber of railway car: " + railwayCarNo +
+                    "\nSeat number:           " + seatNo +
+                    "\nPrice:                 " + cost;
+        }
         return "Id:                    " + id +
                 "\nPassenger number:      " + passengerNo +
                 "\nName:                  " + passengerName +
@@ -33,14 +43,14 @@ public class Ticket {
     public static Ticket buildNullTicket(){
         return Ticket.builder()
                 .id(0)
-                .passengerNo(null)
-                .passengerName(null)
-                .passengerLastName(null)
+                .passengerNo("")
+                .passengerName("")
+                .passengerLastName("")
                 .routeId(0)
                 .railwayCarNo(0)
-                .seatNo(null)
-                .cost(null)
-                .route(null)
+                .seatNo("")
+                .cost(BigDecimal.valueOf(0))
+                .route(Route.builder().build())
                 .build();
     }
 }
