@@ -1,7 +1,9 @@
 package com.mprog.traindemo1.ui;
 
+import com.mprog.traindemo1.model.Route;
 import com.mprog.traindemo1.model.Ticket;
 import com.mprog.traindemo1.service.CurrentLocaleService;
+import com.mprog.traindemo1.service.RouteService;
 import com.mprog.traindemo1.service.TicketService;
 import com.mprog.traindemo1.service.exception.AppException;
 import lombok.Getter;
@@ -24,6 +26,7 @@ import java.util.stream.Collectors;
 public class Commands {
 
     private final TicketService ticketService;
+    private final RouteService routeService;
     private final IO io;
     private final CurrentLocaleService currentLocaleService;
     @Getter
@@ -48,7 +51,7 @@ public class Commands {
         if (tickets.isEmpty()) {
             io.interPrintln("no-ticket-found");
         } else {
-            io.println(ticketsToString(tickets));
+            io.println(objectsToString(tickets));
         }
     }
 
@@ -61,6 +64,16 @@ public class Commands {
 //                "", 0, 0, "", BigDecimal.valueOf(0), );
         state = ShellState.PROCESSING_TICKET;
         show();
+    }
+
+    @ShellMethod(value = "show all routes", key = "all-routes")
+    public void showAllRoutes(){
+        var routes = routeService.findAll();
+        if (routes.isEmpty()) {
+            io.interPrintln("no-route-found");
+        } else {
+            io.println(objectsToString(routes));
+        }
     }
 
     @ShellMethod(value = "update ticket by passenger name", key = "ticket-update")
@@ -77,7 +90,7 @@ public class Commands {
             if (tickets.isEmpty())
                 io.interPrintln("no-ticket-found");
             else if (tickets.size() > 1) {
-                io.println(ticketsToString(tickets));
+                io.println(objectsToString(tickets));
                 io.interPrint("too-many-tickets-found", tickets.size());
                 var id = io.nextInt();
                 findByIdFromCollectionAndProcess(tickets, id);
@@ -103,7 +116,7 @@ public class Commands {
             if (tickets.isEmpty())
                 io.interPrintln("no-ticket-found");
             else if (tickets.size() > 1) {
-                io.println(ticketsToString(tickets));
+                io.println(objectsToString(tickets));
             } else {
                 handlingTicket = tickets.iterator().next();
                 show();
@@ -114,6 +127,7 @@ public class Commands {
     @ShellMethod(value = "show handling book", key = "show")
     @ShellMethodAvailability("availableInUpdatingTicket")
     private void show() {
+        io.interPrintln("set-route");
         io.println(handlingTicket);
     }
 
@@ -266,6 +280,7 @@ public class Commands {
             }
         } catch (AppException e) {
             io.interPrintln(e.getMessage(), e.getParams());
+            io.interPrintln("some-went-wrong");
         }
     }
 
@@ -326,9 +341,9 @@ public class Commands {
         return true;
     }
 
-    private String ticketsToString(Collection<Ticket> tickets) {
-        return tickets.stream()
-                .map(Ticket::toString)
+    private <T> String objectsToString(Collection<T> objects) {
+        return objects.stream()
+                .map(T::toString)
                 .collect(Collectors.joining("\n\n=============================\n\n"));
 
     }
