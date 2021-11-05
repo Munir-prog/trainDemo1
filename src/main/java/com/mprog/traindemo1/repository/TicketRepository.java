@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -20,11 +21,6 @@ import java.util.Optional;
 public class TicketRepository implements RepositoryDao<Ticket> {
 
     private final NamedParameterJdbcOperations jdbc;
-
-    private static final String FIND_ALL_SQL = """
-            SELECT id, passenger_no, passenger_name, passenger_last_name, route_id, railway_car_no, seat_no, cost
-            FROM ticket
-            """;
 
     @Override
     @SneakyThrows
@@ -47,17 +43,6 @@ public class TicketRepository implements RepositoryDao<Ticket> {
                 LEFT JOIN railway_station rs ON r.arrival_railway_station = rs.railway_station_name
                 LEFT JOIN railway_station drs ON drs.railway_station_name = r.departure_railway_station
                 """;
-//        try (var connection = dataSource.getConnection();
-//             var preparedStatement = connection.prepareStatement(FIND_ALL_SQL)) {
-//
-//            Collection<Ticket> ticketCollection = new ArrayList<>();
-//            var resultSet = preparedStatement.executeQuery();
-//            while (resultSet.next()) {
-//                ticketCollection.add(buildTicket(resultSet));
-//            }
-//
-//            return ticketCollection;
-//        }
         return jdbc.query(sql, new TicketResultSetExtractor());
     }
 
@@ -70,22 +55,33 @@ public class TicketRepository implements RepositoryDao<Ticket> {
     @Override
     @SneakyThrows
     public Optional<Ticket> findById(int id) {
-//        try (var connection = dataSource.getConnection();
-//             var preparedStatement = connection.prepareStatement(FIND_BY_ID_SQL)) {
-//
-//            preparedStatement.setInt(1, id);
-//
-//            Ticket ticket = null;
-//
-//            var resultSet = preparedStatement.executeQuery();
-//            if (resultSet.next()) {
-//                ticket = (buildTicket(resultSet));
-//            }
-//
-//
-//            return Optional.ofNullable(ticket);
-//        }
-        return null;
+
+        String sql = """
+                SELECT t.id t_id,
+                        t.passenger_no t_passenger_no,
+                        t.passenger_name t_passenger_name,
+                        t.passenger_last_name t_passenger_last_name,
+                        t.railway_car_no t_railway_car_no,
+                        t.seat_no t_seat_no,
+                        t.cost t_cost,
+                        r.id r_id,
+                        r.arrival_railway_station r_arrival_railway_station,
+                        rs.city ar_railway_station,
+                        r.departure_railway_station r_departure_railway_station,
+                        drs.city dep_railway_station
+                FROM ticket t
+                LEFT JOIN route r on r.id = t.route_id
+                LEFT JOIN railway_station rs ON r.arrival_railway_station = rs.railway_station_name
+                LEFT JOIN railway_station drs ON drs.railway_station_name = r.departure_railway_station
+                WHERE t.id = :id
+                """;
+
+        var list = jdbc.query(sql, Map.of("id", id), new TicketResultSetExtractor());
+        if (list == null || list.isEmpty()) {
+            return Optional.empty();
+        } else {
+            return Optional.of(list.get(0));
+        }
     }
 
     private static final String SAVE_SQL = """
