@@ -1,6 +1,7 @@
 package com.mprog.traindemo1.repository;
 
 import com.mprog.traindemo1.model.Ticket;
+import com.mprog.traindemo1.service.exception.AppException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -147,6 +148,20 @@ public class TicketRepository implements RepositoryDao<Ticket> {
                 WHERE passenger_name = :passenger_name
                 """;
         return jdbc.query(sql, params, new TicketRowMapper());
+    }
+
+    @Override
+    public void deleteById(int id) {
+        String sql = """
+                DELETE FROM ticket
+                WHERE id = :id
+                """;
+        var params = new MapSqlParameterSource();
+        params.addValue("id", id);
+        var deleted = jdbc.update(sql, params);
+        if (deleted == 0){
+            throw new AppException("No such ticket");
+        }
     }
 
     @SneakyThrows

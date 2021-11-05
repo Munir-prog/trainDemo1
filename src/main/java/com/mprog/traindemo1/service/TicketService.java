@@ -47,6 +47,11 @@ public class TicketService implements DaoService<Ticket> {
         return ticketRepository.findByName(name);
     }
 
+    @Override
+    public void deleteById(int id) {
+        ticketRepository.deleteById(id);
+    }
+
     private boolean routeIdIsValid(int routeId) {
         var routeIds = routeRepository.getIds();
         return routeIds.contains(routeId);

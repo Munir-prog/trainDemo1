@@ -11,4 +11,5 @@ public interface RepositoryDao<T> {
     void save(T object);
     void update(T object);
     Collection<T> findByName(String name);
+    void deleteById(int id);
 }

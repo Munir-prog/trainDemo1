@@ -32,4 +32,9 @@ public class RouteService implements DaoService<Route> {
     public Collection<Route> findByName(String name) {
         return null;
     }
+
+    @Override
+    public void deleteById(int id) {
+
+    }
 }

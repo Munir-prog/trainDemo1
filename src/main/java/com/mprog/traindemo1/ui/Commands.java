@@ -102,6 +102,24 @@ public class Commands {
         }
     }
 
+    @ShellMethod(value = "delete ticket by id", key = "delete-by-id")
+    @ShellMethodAvailability("availableInMainMenu")
+    public void deleteById(@ShellOption(defaultValue = "") String id){
+        if (id.isBlank()) {
+            io.interPrintln("set-id");
+            id = io.readLine();
+        }
+        try {
+            var intId = Integer.parseInt(id);
+            ticketService.deleteById(intId);
+            io.interPrintln("operation-successful");
+        } catch (NumberFormatException e){
+            io.interPrintln("try-again");
+        }
+
+
+    }
+
     @ShellMethod(value = "find ticket by passenger name", key = "find-by-name")
     @ShellMethodAvailability("availableInMainMenu")
     public void findByName(@ShellOption(defaultValue = "") String name){

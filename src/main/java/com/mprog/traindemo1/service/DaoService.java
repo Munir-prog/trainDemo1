@@ -8,4 +8,5 @@ public interface DaoService<T> {
     T findById(int id);
     void save(T object);
     Collection<T> findByName(String name);
+    void deleteById(int id);
 }

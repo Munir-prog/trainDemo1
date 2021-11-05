@@ -51,6 +51,11 @@ public class RouteRepository implements RepositoryDao<Route> {
         return null;
     }
 
+    @Override
+    public void deleteById(int id) {
+
+    }
+
     public List<Integer> getIds() {
         String sql = """
                 SELECT id
