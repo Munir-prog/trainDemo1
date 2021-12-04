@@ -6,6 +6,7 @@ import com.mprog.traindemo1.service.TicketService;
 import com.mprog.traindemo1.service.exception.AppException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 
 @ShellComponent
 @RequiredArgsConstructor
+@Slf4j
 public class Commands {
 
     private final TicketService ticketService;
@@ -45,13 +47,30 @@ public class Commands {
     @ShellMethodAvailability("availableInMainMenu")
     public void showAllTickets() {
         var tickets = ticketService.findAll();
+        log.trace("found tickets: {}", tickets);
         if (tickets.isEmpty()) {
+            log.info("ticket not found");
             io.interPrintln("no-ticket-found");
         } else {
             io.println(ticketsToString(tickets));
         }
+
+        log.info("loggggggggggggggggggg info");
+        log.warn("loggggggggggggggggggg warn");
+        log.error("loggggggggggggggggggg error");
+        log.debug("loggggggggggggggggggg debug");
+        log.trace("loggggggggggggggggggg trace");
     }
 
+    @ShellMethod(value = "insert new ticket", key = "a")
+    @ShellMethodAvailability("availableInMainMenu")
+    public void a() {
+        log.info("loggggggggggggggggggg info");
+        log.warn("loggggggggggggggggggg warn");
+        log.error("loggggggggggggggggggg error");
+        log.debug("loggggggggggggggggggg debug");
+        log.trace("loggggggggggggggggggg trace");
+    }
 
     @ShellMethod(value = "insert new ticket", key = "ticket-insert")
     @ShellMethodAvailability("availableInMainMenu")

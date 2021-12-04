@@ -5,7 +5,22 @@ spring:
     password: postgres
     driver-class-name: org.postgresql.Driver
 
+
+#logging:
+#  config: src/main/resources/log4j2.xml
+
 server:
   error:
     include-binding-errors: always
     include-message: always
+logging:
+  file:
+    name: logs/app.log
+  level:
+    root: info
+    com:
+      mprog: trace
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 10
