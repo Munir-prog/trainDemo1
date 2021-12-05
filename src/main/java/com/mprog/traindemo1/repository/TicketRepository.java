@@ -63,8 +63,9 @@ public class TicketRepository implements RepositoryDao<Ticket> {
     @SneakyThrows
     @Transactional
     public void save(Ticket ticket) {
-        var session = getSession();
-        session.saveOrUpdate(ticket);
+        try (var session = getSession()) {
+            session.saveOrUpdate(ticket);
+        }
     }
 
     @Override
@@ -84,8 +85,7 @@ public class TicketRepository implements RepositoryDao<Ticket> {
     @Override
     @Transactional
     public void deleteById(int id) {
-        var session = getSession();
-        try (session) {
+        try (var session = getSession()) {
             var ticket = session.get(Ticket.class, id);
             session.delete(ticket);
         }

@@ -1,6 +1,5 @@
 package com.mprog.traindemo1.ui;
 
-import com.mprog.traindemo1.model.Route;
 import com.mprog.traindemo1.model.Ticket;
 import com.mprog.traindemo1.service.CurrentLocaleService;
 import com.mprog.traindemo1.service.RouteService;
@@ -17,15 +16,12 @@ import org.springframework.shell.standard.ShellOption;
 
 import java.math.BigDecimal;
 import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @ShellComponent
 @RequiredArgsConstructor
 @Slf4j
-public class Commands {
+public class TicketCommands {
 
     private final TicketService ticketService;
     private final RouteService routeService;

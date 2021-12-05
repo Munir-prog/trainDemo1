@@ -25,7 +25,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RouteRepository implements RepositoryDao<Route> {
 
-    private final NamedParameterJdbcOperations jdbc;
     @PersistenceContext
     private final EntityManager entityManager;
 
@@ -38,48 +37,35 @@ public class RouteRepository implements RepositoryDao<Route> {
             query.from(Route.class);
             return session.createQuery(query).getResultList();
         }
-
-//        String sql = """
-//                SELECT id, route_no, departure_date, departure_railway_station,
-//                        arrival_date, arrival_railway_station, train_id, status
-//                FROM route
-//                """;
-//        return jdbc.query(sql, new RouteRowMapper());
     }
 
     @Override
     public Optional<Route> findById(int id) {
-        return Optional.empty();
+        try (var session = getSession()) {
+            return Optional.ofNullable(session.get(Route.class, id));
+        }
+
     }
 
     @Override
     public void save(Route object) {
-
+        try (var session = getSession()) {
+            session.saveOrUpdate(object);
+        }
     }
 
+
+    @Override
+    public void deleteById(int id) {
+        try (var session = getSession()) {
+            var ticket = session.get(Route.class, id);
+            session.delete(ticket);
+        }
+    }
 
     @Override
     public Collection<Route> findByName(String name) {
         return null;
-    }
-
-    @Override
-    public void deleteById(int id) {
-
-    }
-
-    public List<Integer> getIds() {
-        String sql = """
-                SELECT id
-                FROM route
-                """;
-        return jdbc.query(sql, (ResultSetExtractor<List<Integer>>) rs -> {
-            var list = new ArrayList<Integer>();
-            while (rs.next()){
-                list.add(rs.getInt("id"));
-            }
-            return list;
-        });
     }
 
     public Session getSession() {
