@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @ShellComponent
 @RequiredArgsConstructor
 @Slf4j
-public class TicketCommands {
+public class Commands {
 
     private final TicketService ticketService;
     private final RouteService routeService;
