@@ -78,7 +78,7 @@ public class Commands {
     }
 
     @ShellMethod(value = "show all routes", key = "all-routes")
-    public void showAllRoutes(){
+    public void showAllRoutes() {
         var routes = routeService.findAll();
         if (routes.isEmpty()) {
             io.interPrintln("no-route-found");
@@ -115,7 +115,7 @@ public class Commands {
 
     @ShellMethod(value = "delete ticket by id", key = "delete-by-id")
     @ShellMethodAvailability("availableInMainMenu")
-    public void deleteById(@ShellOption(defaultValue = "") String id){
+    public void deleteById(@ShellOption(defaultValue = "") String id) {
         if (id.isBlank()) {
             io.interPrintln("set-id");
             id = io.readLine();
@@ -124,7 +124,7 @@ public class Commands {
             var intId = Integer.parseInt(id);
             ticketService.deleteById(intId);
             io.interPrintln("operation-successful");
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             io.interPrintln("try-again");
         }
 
@@ -133,7 +133,7 @@ public class Commands {
 
     @ShellMethod(value = "find ticket by passenger name", key = "find-by-name")
     @ShellMethodAvailability("availableInMainMenu")
-    public void findByName(@ShellOption(defaultValue = "") String name){
+    public void findByName(@ShellOption(defaultValue = "") String name) {
         if (name.isBlank()) {
             io.interPrint("print-passenger-name");
             name = io.readLine();
@@ -150,6 +150,21 @@ public class Commands {
                 handlingTicket = tickets.iterator().next();
                 show();
             }
+        }
+    }
+
+    @ShellMethod(value = "find ticket by passenger id", key = "find-by-id")
+    @ShellMethodAvailability("availableInMainMenu")
+    public void findById(@ShellOption(defaultValue = "") String id) {
+        if (id.isBlank()) {
+            io.interPrint("print-passenger-id");
+            id = io.readLine();
+        }
+        if (id.isBlank()) {
+            io.interPrintln("operation-cancelled-by-empty-line");
+        } else {
+            handlingTicket = ticketService.findById(Integer.parseInt(id));
+            show();
         }
     }
 

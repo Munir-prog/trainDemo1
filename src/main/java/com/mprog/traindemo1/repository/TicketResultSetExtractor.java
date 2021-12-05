@@ -42,7 +42,7 @@ public class TicketResultSetExtractor implements ResultSetExtractor<List<Ticket>
             }
 
             route.getTickets().add(currentTicket);
-            currentTicket.setRoute(route);
+//            currentTicket.setRoute(route);
 
         }
 
@@ -69,7 +69,7 @@ public class TicketResultSetExtractor implements ResultSetExtractor<List<Ticket>
                 .railwayCarNo(rs.getInt("t_railway_car_no"))
                 .seatNo(rs.getString("t_seat_no"))
                 .cost(rs.getBigDecimal("t_cost"))
-                .route(null)
+//                .route(null)
                 .build();
     }
 }

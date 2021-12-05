@@ -3,15 +3,13 @@ spring:
     url: jdbc:postgresql://localhost:5432/railway_repository
     username: postgres
     password: postgres
-#    driver-class-name: org.postgresql.Driver
   sql:
     init:
       mode: always
-#
-#server:
-#  error:
-#    include-binding-errors: always
-#    include-message: always
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
 
 logging:
   file:
@@ -24,3 +22,4 @@ logging:
     rollingpolicy:
       max-file-size: 10MB
       max-history: 10
+

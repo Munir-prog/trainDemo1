@@ -4,48 +4,45 @@ import com.mprog.traindemo1.model.Ticket;
 import com.mprog.traindemo1.service.exception.AppException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.jpa.boot.spi.EntityManagerFactoryBuilder;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 @RequiredArgsConstructor
 public class TicketRepository implements RepositoryDao<Ticket> {
 
     private final NamedParameterJdbcOperations jdbc;
+    @PersistenceContext
+    private final EntityManager entityManager;
+    private static Session session;
 
     @Override
     @SneakyThrows
     public Collection<Ticket> findAll() {
-        String sql = """
-                SELECT t.id t_id,
-                        t.passenger_no t_passenger_no,
-                        t.passenger_name t_passenger_name,
-                        t.passenger_last_name t_passenger_last_name,
-                        t.railway_car_no t_railway_car_no,
-                        t.seat_no t_seat_no,
-                        t.cost t_cost,
-                        r.id r_id,
-                        r.arrival_railway_station r_arrival_railway_station,
-                        rs.city ar_railway_station,
-                        r.departure_railway_station r_departure_railway_station,
-                        drs.city dep_railway_station
-                FROM ticket t
-                LEFT JOIN route r on r.id = t.route_id
-                LEFT JOIN railway_station rs ON r.arrival_railway_station = rs.railway_station_name
-                LEFT JOIN railway_station drs ON drs.railway_station_name = r.departure_railway_station
-                """;
-        return jdbc.query(sql, new TicketResultSetExtractor());
+        var session = getSession();
+        try (session) {
+            var query = session.getCriteriaBuilder().createQuery(Ticket.class);
+            var from = query.from(Ticket.class);
+            var select = query.select(from);
+            return TicketRepository.session.createQuery(query).getResultList();
+        }
     }
 
 
@@ -53,32 +50,38 @@ public class TicketRepository implements RepositoryDao<Ticket> {
     @SneakyThrows
     public Optional<Ticket> findById(int id) {
 
-        String sql = """
-                SELECT t.id t_id,
-                        t.passenger_no t_passenger_no,
-                        t.passenger_name t_passenger_name,
-                        t.passenger_last_name t_passenger_last_name,
-                        t.railway_car_no t_railway_car_no,
-                        t.seat_no t_seat_no,
-                        t.cost t_cost,
-                        r.id r_id,
-                        r.arrival_railway_station r_arrival_railway_station,
-                        rs.city ar_railway_station,
-                        r.departure_railway_station r_departure_railway_station,
-                        drs.city dep_railway_station
-                FROM ticket t
-                LEFT JOIN route r on r.id = t.route_id
-                LEFT JOIN railway_station rs ON r.arrival_railway_station = rs.railway_station_name
-                LEFT JOIN railway_station drs ON drs.railway_station_name = r.departure_railway_station
-                WHERE t.id = :id
-                """;
-
-        var list = jdbc.query(sql, Map.of("id", id), new TicketResultSetExtractor());
-        if (list == null || list.isEmpty()) {
-            return Optional.empty();
-        } else {
-            return Optional.of(list.get(0));
+        var session = getSession();
+        try (session) {
+            var ticket = session.get(Ticket.class, id);
+            return Optional.ofNullable(ticket);
         }
+//
+//        String sql = """
+//                SELECT t.id t_id,
+//                        t.passenger_no t_passenger_no,
+//                        t.passenger_name t_passenger_name,
+//                        t.passenger_last_name t_passenger_last_name,
+//                        t.railway_car_no t_railway_car_no,
+//                        t.seat_no t_seat_no,
+//                        t.cost t_cost,
+//                        r.id r_id,
+//                        r.arrival_railway_station r_arrival_railway_station,
+//                        rs.city ar_railway_station,
+//                        r.departure_railway_station r_departure_railway_station,
+//                        drs.city dep_railway_station
+//                FROM ticket t
+//                LEFT JOIN route r on r.id = t.route_id
+//                LEFT JOIN railway_station rs ON r.arrival_railway_station = rs.railway_station_name
+//                LEFT JOIN railway_station drs ON drs.railway_station_name = r.departure_railway_station
+//                WHERE t.id = :id
+//                """;
+//
+//        var list = jdbc.query(sql, Map.of("id", id), new TicketResultSetExtractor());
+//        if (list == null || list.isEmpty()) {
+//            return Optional.empty();
+//        } else {
+//            return Optional.of(list.get(0));
+//        }
     }
 
     private static final String SAVE_SQL = """
@@ -186,6 +189,14 @@ public class TicketRepository implements RepositoryDao<Ticket> {
         preparedStatement.setInt(5, object.getRailwayCarNo());
         preparedStatement.setString(6, object.getSeatNo());
         preparedStatement.setBigDecimal(7, object.getCost());
+    }
+
+    @Transactional
+    public Session getSession() {
+        if (session == null) {
+            session = entityManager.unwrap(Session.class);
+        }
+        return session;
     }
 
 }
