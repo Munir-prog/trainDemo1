@@ -32,14 +32,8 @@ public class TicketService implements DaoService<Ticket> {
     }
 
     @Override
-    public void save(Ticket object) {
-        if (routeIdIsValid(object.getRouteId())) {
-            if (object.getId() == 0) {
-                ticketRepository.save(object);
-            } else {
-                ticketRepository.update(object);
-            }
-        }
+    public void save(Ticket ticket) {
+        ticketRepository.save(ticket);
     }
 
     @Override

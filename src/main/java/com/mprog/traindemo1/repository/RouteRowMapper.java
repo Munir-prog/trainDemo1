@@ -17,7 +17,7 @@ public class RouteRowMapper implements RowMapper<Route> {
                 .id(rs.getInt("id"))
                 .routeNo(rs.getString("route_no"))
                 .departureDate(rs.getDate("departure_date").toLocalDate())
-                .departureRailwayStation(new DepartureRailwayStation(null, rs.getString("departure_railway_station")))
+//                .departureRailwayStation(new DepartureRailwayStation(null, rs.getString("departure_railway_station")))
                 .arrivalDate(rs.getDate("arrival_date").toLocalDate())
                 .arrivalRailwayStation(new ArrivalRailwayStation(null, rs.getString("arrival_railway_station")))
                 .trainId(rs.getInt("train_id"))

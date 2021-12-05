@@ -1,15 +1,8 @@
 package com.mprog.traindemo1.model;
 
-import lombok.Data;
-import lombok.Value;
+public final class DepartureRailwayStation extends RailwayStation{
 
-@Value
-public class DepartureRailwayStation {
-    String city;
-    String railwayStationName;
-
-    @Override
-    public String toString() {
-        return city + " - " + railwayStationName;
+    public DepartureRailwayStation(String city, String railwayStationName) {
+        super(city, railwayStationName);
     }
 }

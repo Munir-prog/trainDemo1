@@ -2,9 +2,7 @@ package com.mprog.traindemo1.model;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Data
@@ -16,6 +14,7 @@ import java.math.BigDecimal;
 public class Ticket {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
     String passengerNo;
     String passengerName;
@@ -48,7 +47,7 @@ public class Ticket {
                 "\nPrice:                 " + cost;
     }
 
-    public static Ticket buildNullTicket(){
+    public static Ticket buildNullTicket() {
         return Ticket.builder()
                 .id(0)
                 .passengerNo("")

@@ -41,10 +41,6 @@ public class RouteRepository implements RepositoryDao<Route> {
 
     }
 
-    @Override
-    public void update(Route object) {
-
-    }
 
     @Override
     public Collection<Route> findByName(String name) {

@@ -53,7 +53,7 @@ public class TicketResultSetExtractor implements ResultSetExtractor<List<Ticket>
     private Route buildRoute(ResultSet rs, int routeId) {
         return Route.builder()
                 .id(routeId)
-                .departureRailwayStation(new DepartureRailwayStation(rs.getString("dep_railway_station"), rs.getString("r_departure_railway_station")))
+//                .departureRailwayStation(new DepartureRailwayStation(rs.getString("dep_railway_station"), rs.getString("r_departure_railway_station")))
                 .arrivalRailwayStation(new ArrivalRailwayStation(rs.getString("ar_railway_station"), rs.getString("r_arrival_railway_station")))
                 .tickets(new HashSet<>())
                 .build();
