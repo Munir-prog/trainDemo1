@@ -92,7 +92,7 @@ public class TicketRepository implements RepositoryDao<Ticket> {
     }
 
 
-    public Session getSession() {
+    private Session getSession() {
         return entityManager.unwrap(Session.class);
     }
 

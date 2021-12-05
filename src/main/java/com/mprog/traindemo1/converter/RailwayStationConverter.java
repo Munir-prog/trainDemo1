@@ -10,15 +10,15 @@ public class RailwayStationConverter implements AttributeConverter<RailwayStatio
     @Override
     public String convertToDatabaseColumn(RailwayStation attribute) {
         return Optional.ofNullable(attribute)
-                .map(it -> it.getCity() + " " + it.getRailwayStationName())
-                .orElse(null);
+                .map(it -> it.city() + " " + it.railwayStationName())
+                .orElse("");
     }
 
     @Override
     public RailwayStation convertToEntityAttribute(String dbData) {
         return Optional.ofNullable(dbData)
                 .map(RailwayStationConverter::convertToRailwayStation)
-                .orElse(null);
+                .orElse(new RailwayStation("unknown", "unknown"));
     }
 
     private static RailwayStation convertToRailwayStation(String str) {
@@ -26,6 +26,6 @@ public class RailwayStationConverter implements AttributeConverter<RailwayStatio
         if (split.length == 2)
             return new RailwayStation(split[0], split[1]);
         else
-            return new RailwayStation(split[0], "");
+            return new RailwayStation("unknown", split[0]);
     }
 }

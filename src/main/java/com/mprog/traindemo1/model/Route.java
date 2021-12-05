@@ -5,7 +5,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Collection;
 
 @Data
 @Builder
@@ -24,12 +23,12 @@ public class Route {
     LocalDate departureDate;
 
     @Convert(converter = RailwayStationConverter.class)
-    DepartureRailwayStation departureRailwayStation;
+    RailwayStation departureRailwayStation;
 
     LocalDate arrivalDate;
 
     @Convert(converter = RailwayStationConverter.class)
-    ArrivalRailwayStation arrivalRailwayStation;
+    RailwayStation arrivalRailwayStation;
 
     int trainId;
 

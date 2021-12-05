@@ -1,8 +1,6 @@
 package com.mprog.traindemo1.repository;
 
 
-import com.mprog.traindemo1.model.ArrivalRailwayStation;
-import com.mprog.traindemo1.model.DepartureRailwayStation;
 import com.mprog.traindemo1.model.Route;
 import com.mprog.traindemo1.model.Ticket;
 import lombok.SneakyThrows;
@@ -41,7 +39,7 @@ public class TicketResultSetExtractor implements ResultSetExtractor<List<Ticket>
                 routes.put(routeId, route);
             }
 
-            route.getTickets().add(currentTicket);
+//            route.getTickets().add(currentTicket);
 //            currentTicket.setRoute(route);
 
         }
@@ -54,8 +52,8 @@ public class TicketResultSetExtractor implements ResultSetExtractor<List<Ticket>
         return Route.builder()
                 .id(routeId)
 //                .departureRailwayStation(new DepartureRailwayStation(rs.getString("dep_railway_station"), rs.getString("r_departure_railway_station")))
-                .arrivalRailwayStation(new ArrivalRailwayStation(rs.getString("ar_railway_station"), rs.getString("r_arrival_railway_station")))
-                .tickets(new HashSet<>())
+//                .arrivalRailwayStation(new ArrivalRailwayStation(rs.getString("ar_railway_station"), rs.getString("r_arrival_railway_station")))
+//                .tickets(new HashSet<>())
                 .build();
     }
 

@@ -1,7 +1,5 @@
 package com.mprog.traindemo1.repository;
 
-import com.mprog.traindemo1.model.ArrivalRailwayStation;
-import com.mprog.traindemo1.model.DepartureRailwayStation;
 import com.mprog.traindemo1.model.Route;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
@@ -19,7 +17,7 @@ public class RouteRowMapper implements RowMapper<Route> {
                 .departureDate(rs.getDate("departure_date").toLocalDate())
 //                .departureRailwayStation(new DepartureRailwayStation(null, rs.getString("departure_railway_station")))
                 .arrivalDate(rs.getDate("arrival_date").toLocalDate())
-                .arrivalRailwayStation(new ArrivalRailwayStation(null, rs.getString("arrival_railway_station")))
+//                .arrivalRailwayStation(new ArrivalRailwayStation(null, rs.getString("arrival_railway_station")))
                 .trainId(rs.getInt("train_id"))
                 .status(rs.getString("status"))
                 .build();

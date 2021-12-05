@@ -1,8 +1,5 @@
 package com.mprog.traindemo1.model;
 
-public final class DepartureRailwayStation extends RailwayStation{
-
-    public DepartureRailwayStation(String city, String railwayStationName) {
-        super(city, railwayStationName);
-    }
-}
+//public record DepartureRailwayStation(String city, String railwayStationName) implements RailwayStation{
+//
+//}
