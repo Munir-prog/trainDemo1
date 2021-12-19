@@ -30,3 +30,5 @@ gradlew.bat
 mvnw
 mvnw.cmd
 .mvn/
+*.gz
+logs/

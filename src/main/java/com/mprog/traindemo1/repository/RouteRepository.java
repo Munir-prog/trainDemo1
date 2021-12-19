@@ -13,13 +13,12 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class RouteRepository implements RepositoryDao<Route> {
+public class RouteRepository {
 
     @PersistenceContext
     private final EntityManager entityManager;
 
 
-    @Override
     @Transactional
     public Collection<Route> findAll() {
         try (var session = getSession();) {
@@ -29,7 +28,6 @@ public class RouteRepository implements RepositoryDao<Route> {
         }
     }
 
-    @Override
     public Optional<Route> findById(int id) {
         try (var session = getSession()) {
             return Optional.ofNullable(session.get(Route.class, id));
@@ -37,7 +35,6 @@ public class RouteRepository implements RepositoryDao<Route> {
 
     }
 
-    @Override
     public void save(Route object) {
         try (var session = getSession()) {
             session.saveOrUpdate(object);
@@ -45,7 +42,6 @@ public class RouteRepository implements RepositoryDao<Route> {
     }
 
 
-    @Override
     public void deleteById(int id) {
         try (var session = getSession()) {
             var ticket = session.get(Route.class, id);
@@ -53,7 +49,6 @@ public class RouteRepository implements RepositoryDao<Route> {
         }
     }
 
-    @Override
     public Collection<Route> findByName(String name) {
         return null;
     }
