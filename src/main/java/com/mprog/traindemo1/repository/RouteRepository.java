@@ -2,12 +2,7 @@ package com.mprog.traindemo1.repository;
 
 import com.mprog.traindemo1.model.Route;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.Collection;
 import java.util.Optional;
 
