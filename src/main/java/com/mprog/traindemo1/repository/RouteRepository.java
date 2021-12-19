@@ -15,45 +15,23 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RouteRepository {
 
-    @PersistenceContext
-    private final EntityManager entityManager;
+    private final RouteDao routeDao;
 
-
-    @Transactional
     public Collection<Route> findAll() {
-        try (var session = getSession();) {
-            var query = session.getCriteriaBuilder().createQuery(Route.class);
-            query.from(Route.class);
-            return session.createQuery(query).getResultList();
-        }
+        return routeDao.findAll();
     }
 
     public Optional<Route> findById(int id) {
-        try (var session = getSession()) {
-            return Optional.ofNullable(session.get(Route.class, id));
-        }
-
+        return routeDao.findById(id);
     }
 
     public void save(Route object) {
-        try (var session = getSession()) {
-            session.saveOrUpdate(object);
-        }
+        routeDao.save(object);
     }
 
 
     public void deleteById(int id) {
-        try (var session = getSession()) {
-            var ticket = session.get(Route.class, id);
-            session.delete(ticket);
-        }
+        routeDao.deleteById(id);
     }
 
-    public Collection<Route> findByName(String name) {
-        return null;
-    }
-
-    public Session getSession() {
-        return entityManager.unwrap(Session.class);
-    }
 }
