@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tickets</title>
+</head>
+<body>
+<div>
+    <div>
+        <a href=""></a>
+    </div>
+    <table>
+        <thead>
+        <th>Passenger Number</th>
+        <th>Passenger Name</th>
+        <th>Passenger Last Name</th>
+        <th>Seat Number</th>
+        <th>Ticket Price</th>
+        </thead>
+        <tbody>
+        <tr th:if="${tickets.empty}">
+            <td colspan="2"> No Tickets Available</td>
+        </tr>
+        <tr th:each="ticket : ${tickets}">
+            <td>
+                <a th:href="@{/app/ticket/{id}(id=${ticket.id})}">
+                    <span th:text="${ticket.passengerNo}"> Title </span>
+                </a>
+            </td>
+            <td>
+                <a th:href="@{/app/ticket/{id}(id=${ticket.id})}">
+                    <span th:text="${ticket.passengerName}"> Author </span>
+                </a>
+            </td>
+            <td>
+                <a th:href="@{/app/ticket/{id}(id=${ticket.id})}">
+                    <span th:text="${ticket.passengerLastName}"> Author </span>
+                </a>
+            </td>
+            <td>
+                <a th:href="@{/app/ticket/{id}(id=${ticket.id})}">
+                    <span th:text="${ticket.seatNo}"> Author </span>
+                </a>
+            </td>
+            <td>
+                <a th:href="@{/app/ticket/{id}(id=${ticket.id})}">
+                    <span th:text="${ticket.cost}"> Author </span>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+</body>
+</html>
