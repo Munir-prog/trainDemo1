@@ -1,4 +1,11 @@
 spring:
+  thymeleaf:
+    cache: true
+    enabled: true
+    prefix: classpath:/templates/
+    suffix: .html
+  application:
+    name: Bootstrap spring Boot
   datasource:
     url: jdbc:postgresql://localhost:5432/railway_repository
     username: postgres
@@ -11,6 +18,8 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
 
+
+
 logging:
   file:
     name: logs/app.log
@@ -22,4 +31,8 @@ logging:
     rollingpolicy:
       max-file-size: 10MB
       max-history: 10
+
+
+server:
+  port: 8085
 

@@ -26,8 +26,9 @@ repositories {
 
 dependencies {
     implementation group: 'org.hibernate', name: 'hibernate-core', version: '5.6.1.Final'
-
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.shell:spring-shell-starter:2.0.0.RELEASE'
 //    implementation group: 'org.springframework', name: 'spring-jdbc', version: '5.3.11'
