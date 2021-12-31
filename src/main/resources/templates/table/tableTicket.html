@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Tickets</title>
@@ -9,6 +9,12 @@
     <div>
         <a href="#" th:href="@{/app/ticket-by-name}">
             <button> Find ticket by name </button>
+        </a>
+        <a href="#" th:href="@{/app/edit/ticket}">
+            <button> Add new Ticket</button>
+        </a>
+        <a href="#" th:href="@{/app/tickets}">
+            <button> All Tickets</button>
         </a>
     </div>
     <table>
@@ -47,6 +53,16 @@
             <td>
                 <a th:href="@{/app/ticket/{id}(id=${ticket.id})}">
                     <span th:text="${ticket.cost}"> Author </span>
+                </a>
+            </td>
+            <td>
+                <a th:href="@{/app/edit/ticket/{id}(id=${ticket.id})}">
+                    <button>Edit</button>
+                </a>
+            </td>
+            <td>
+                <a th:href="@{/app/delete/ticket/{id}(id=${ticket.id})}">
+                    <button>Delete</button>
                 </a>
             </td>
         </tr>

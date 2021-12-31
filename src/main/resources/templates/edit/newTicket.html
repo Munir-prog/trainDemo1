@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New Ticket</title>
+</head>
+<body>
+<div>
+
+    <h2>New ticket:</h2>
+    <form action="#" th:action="@{/app/save/ticket/{id}(id=${ticket.id})}" th:object="${ticket}" method="post">
+        <label>Name: <br>
+            <input type="text" th:field="*{passengerName}">
+        </label><br>
+        <label>Last name: <br>
+            <input type="text" th:field="*{passengerLastName}">
+        </label><br>
+        <label>Route id: <br>
+            <input type="number" th:field="*{routeId}">
+        </label><br>
+        <label>Number of railway car: <br>
+            <input type="number" th:field="*{railwayCarNo}">
+        </label><br>
+        <label>Seat number: <br>
+            <input type="text" th:field="*{seatNo}">
+        </label><br>
+        <label>Ticket price: <br>
+            <input type="text" th:field="*{cost}">
+        </label><br>
+        <button type="submit">Save</button>
+    </form>
+</div>
+</body>
+</html>

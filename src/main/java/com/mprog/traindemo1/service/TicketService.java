@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.function.Supplier;
 
 @Service
@@ -33,6 +34,8 @@ public class TicketService implements DaoService<Ticket> {
 
     @Override
     public void save(Ticket ticket) {
+        if (ticket.getPassengerNo() == null || ticket.getPassengerNo().equals(""))
+            ticket.setPassengerNo(generatePassengerNo());
         ticketRepository.save(ticket);
     }
 
@@ -44,6 +47,43 @@ public class TicketService implements DaoService<Ticket> {
     @Override
     public void deleteById(int id) {
         ticketRepository.deleteById(id);
+    }
+
+    private String generatePassengerNo() {
+        var random = new Random();
+        var i = random.nextInt(3);
+        var builder = new StringBuilder();
+        if (i == 0){
+            appendThreeNumbers(random, builder);
+            appendThreeNumbers(random, builder);
+            return builder.toString();
+        } else if (i == 1){
+            appendThreeChars(random, builder);
+            appendThreeChars(random, builder);
+        } else {
+            var i1 = random.nextInt(2);
+            if (i1 == 0){
+                appendThreeChars(random, builder);
+                appendThreeNumbers(random, builder);
+            }
+            if (i1 == 1){
+                appendThreeNumbers(random, builder);
+                appendThreeChars(random, builder);
+            }
+        }
+        return builder.toString();
+    }
+
+    private void appendThreeChars(Random random, StringBuilder builder) {
+        for (int i = 0; i < 3; i++) {
+            builder.append((char) random.nextInt(65, 91));
+        }
+    }
+
+    private void appendThreeNumbers(Random random, StringBuilder builder) {
+        for (int j = 0; j < 3; j++) {
+            builder.append(random.nextInt(10));
+        }
     }
 
 
