@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ticket by name.</title>
+</head>
+<body>
+
+<div>
+  <h2>Find ticket by name:</h2>
+  <form action="#" th:action="@{/app/ticket-by-name}" th:object="${ticket}" method="post">
+      <label>Name: <br>
+          <input type="text" th:field="*{passengerName}">
+      </label>
+      <button type="submit">Find</button>
+  </form>
+</div>
+</body>
+</html>

@@ -6,11 +6,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+
 
 @Controller
 @RequestMapping("/app")
@@ -43,9 +42,23 @@ public class TicketController {
         return "view/ticket";
     }
 
-    @GetMapping("/ticket/{name}")
-    public String ticketByName(Model model, @PathVariable String name){
-        model.addAttribute("ticket", ticketService.findByName(name));
-        return "view/ticket";
+    @GetMapping("/ticket-by-name")
+    public String newTicket(Model model){
+        model.addAttribute("ticket", new Ticket());
+        return "find/ticketByName";
     }
+
+    @PostMapping("/ticket-by-name")
+    public String ticketByName(@ModelAttribute Ticket ticket, Model model){
+//        model.addAttribute("ticket", new Ticket());
+        var ticketsByName = ticketService.findByName(ticket.getPassengerName());
+        model.addAttribute("tickets", ticketsByName);
+        return "table/tableTicket";
+    }
+
+//    @GetMapping("/ticket/{name}")
+//    public String ticketByName(Model model, @PathVariable String name){
+//        model.addAttribute("ticket", ticketService.findByName(name));
+//        return "view/ticket";
+//    }
 }
